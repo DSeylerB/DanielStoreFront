@@ -1,20 +1,25 @@
-﻿@model DanielStoreFront.Models.ProductsViewModel
+﻿@model DanielStoreFront.Models.ProductsViewModel[]
 @{
     ViewData["Title"] = "Index";
 }
 <!--./Views/Products/index.cshtml/-->
-<h2>Products works!</h2>
-<div class="row">
-    <div class="col-4">
+@foreach (var product in Model)
+{
+<h2>@product.Name</h2>
+    <div class="row">
+        <div class="col-4">
+            <img src=" " alt="@product.Name" sizes=" = 300" />
+        </div>
+        <div class="col-8">
+            <dl>
+                <dt>Explosive Yield</dt>
+                <dd>@product.ExplosiveYield Kilotons</dd>
+                <dt>Description</dt>
+                <dd>@product.Description</dd>
+                <dt>Price</dt>
+                <dd>@product.Price.ToString("c")</dd>
+            </dl>
 
+        </div>
     </div>
-    <div class="col-8">
-        <dl>
-            <dt>Name</dt>
-            <dd>@Model.Name</dd>
-            <dt>Description</dt>
-            <dd>@Model.Description</dd>
-        </dl>
-       
-    </div>
-</div>
+}
