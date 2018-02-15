@@ -14,7 +14,11 @@ namespace DanielStoreFront.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            ViewData["States"] = new string[] {"Alabama", "Arkansas", "Alaska" };
+            string productName = "Your bomb";
+            Request.Cookies.TryGetValue("productID", out productName);
+            ViewData["productName"] = productName;
+
+            // ViewData["States"] = new string[] {"Alabama", "Arkansas", "Alaska" };
             return View();
         }
 

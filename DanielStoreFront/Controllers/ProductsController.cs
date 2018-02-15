@@ -65,5 +65,30 @@ namespace DanielStoreFront.Controllers
             return View(model);
         }
        
+        [HttpPost]
+        public IActionResult Index(string id, bool? extraparam)
+        {
+            string cartId;
+            if(!Request.Cookies.ContainsKey("cartId"))
+            {
+                cartId = Guid.NewGuid().ToString();
+                Response.Cookies.Append("cartId", cartId, 
+                    new Microsoft.AspNetCore.Http.CookieOptions
+                    {
+                        Expires = DateTime.Now.AddYears(1)
+                    });
+            }
+            else
+            {
+                Request.Cookies.TryGetValue("cartId", out cartId);
+            }
+
+            Response.Cookies.Append("productID", id);
+
+            
+            //this.HttpContext.Session.Set(cartId, );
+
+            return RedirectToAction("Index", "Checkout");
+        }
     }
 }

@@ -19,7 +19,10 @@
                 <dt>Price</dt>
                 <dd>@product.Price.ToString("c")</dd>
             </dl>
-
+            <form asp-action="index" asp-controller="Products">
+                <input type="hidden" name="id" value="@product.Name" />
+                <input type="Submit" value="Give me a Bomb!" />
+            </form>
         </div>
     </div>
 }
