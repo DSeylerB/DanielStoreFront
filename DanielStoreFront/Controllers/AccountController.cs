@@ -40,14 +40,27 @@ namespace DanielStoreFront.Controllers
 
             if (ModelState.IsValid)
             {
-                IdentityUser oldUser = new IdentityUser(username);
-                var passwordResult = _signInManager.UserManager.CheckPasswordAsync(username, password).Result;
+                IdentityUser oldUser = _signInManager.UserManager.FindByNameAsync(username).Result;
+                if (oldUser != null)
+                {
+                   if (_signInManager.UserManager.CheckPasswordAsync(oldUser, password).Result)
+                   {
+                        _signInManager.SignInAsync(oldUser, false);
+                        return RedirectToAction("Index", "Home");
+                   }
+                    else
+                    {
+                        ModelState.AddModelError("username", "Username or password is incorrect.");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("username", "Username or password is incorrect.");
+                }
                 return RedirectToAction("Index", "Home");
             }
-            else
-            {
-                return View();
-            }
+
+            return View();
         }
 
         [HttpPost]
