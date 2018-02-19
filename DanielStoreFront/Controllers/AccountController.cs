@@ -21,10 +21,33 @@ namespace DanielStoreFront.Controllers
             return View();
         }
 
+        public IActionResult Login()
+        {
+            return View();
+        }
+
         public IActionResult Logout()
         {
             _signInManager.SignOutAsync().Wait();
             return RedirectToAction("Index", "Home");
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Login(string username, string password)
+        {
+
+            if (ModelState.IsValid)
+            {
+                IdentityUser oldUser = new IdentityUser(username);
+                var passwordResult = _signInManager.UserManager.CheckPasswordAsync(username, password).Result;
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         [HttpPost]
