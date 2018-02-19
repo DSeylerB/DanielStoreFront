@@ -45,7 +45,7 @@ namespace DanielStoreFront.Controllers
                 {
                    if (_signInManager.UserManager.CheckPasswordAsync(oldUser, password).Result)
                    {
-                        _signInManager.SignInAsync(oldUser, false);
+                        _signInManager.SignInAsync(oldUser, false).Wait();
                         return RedirectToAction("Index", "Home");
                    }
                     else
