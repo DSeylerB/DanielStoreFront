@@ -13,54 +13,41 @@ namespace DanielStoreFront.Controllers
         // GET: /<controller>/
         public IActionResult Index(string IdQuery)
         {
-            Models.ProductsViewModel[] model = null;
-            //string query = QuerySelector();
-            
-            if (IdQuery == "0")
-            {
-                model = new Models.ProductsViewModel[3];
-                model[0] = new Models.ProductsViewModel();
-                model[0].ID = 1;
-                model[0].Name = "Little Boy";
-                model[0].Price = 2000000;
-                model[0].Description = "The original";
-                model[0].ExplosiveYield = 16.6m;
+            List<Models.ProductsViewModel> model = new List<Models.ProductsViewModel>();
 
-                model[1] = new Models.ProductsViewModel();
-                model[1].ID = 2;
-                model[1].Name = "Fat Man";
-                model[1].Price = 2000000;
-                model[1].Description = "Little Boy's bigger brother.";
-                model[1].ExplosiveYield = 18.8m;
+            string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=DanielTest;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            var connection = new System.Data.SqlClient.SqlConnection(connectionString);
+
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT * FROM Products";
+            var reader = command.ExecuteReader();
+            var nameColumn = reader.GetOrdinal("Name");
+            var priceColumn = reader.GetOrdinal("Price");
+            var explosiveYieldColumn = reader.GetOrdinal("ExplosiveYield");
+            var descriptionColumn = reader.GetOrdinal("Description");
+            //var imageUrlColumn = reader.GetOrdinal("ImageUrl");
+            while (reader.Read())
+            {
+                model.Add(
+                    new Models.ProductsViewModel
+                    {
+                        Name = reader.GetString(nameColumn),  //I can see name is the second column in the database.
+                        Price = reader.GetDecimal(priceColumn),
+                        Description = reader.GetString(descriptionColumn),
+                        ExplosiveYield = reader.GetDecimal(explosiveYieldColumn)
+                    });
                 
-                model[2] = new Models.ProductsViewModel();
-                model[2].ID = 3;
-                model[2].Name = "Tzar Bomba";
-                model[2].Price = 2000000000;
-                model[2].Description = "So powerful the russians were too scared to test it at full power! The shockwave still went around the globe THREE times at 50% yield.";
-                model[2].ExplosiveYield = 100000;
             }
-            
-            else if ( IdQuery == "1" )
-            {
-                model = new Models.ProductsViewModel[1];
-                model[0] = new Models.ProductsViewModel();
-                model[0].ID = 1;
-                model[0].Name = "Little Boy";
-                model[0].Price = 2000000;
-                model[0].Description = "The original";
-                model[0].ExplosiveYield = 16.6m;             
-            }
-            else if (IdQuery == "2")
-            {
-                model = new Models.ProductsViewModel[1];
-                model[0] = new Models.ProductsViewModel();
-                model[0].ID = 2;
-                model[0].Name = "Fat Man";
-                model[0].Price = 2000000;
-                model[0].Description = "Little Boy's bigger brother.";
-                model[0].ExplosiveYield = 18.8m;
-            }
+
+            //    model[0] = new Models.ProductsViewModel();
+            //    model[0].ID = 1;
+            //    model[0].Name = "Little Boy";
+            //    model[0].Price = 2000000;
+            //    model[0].Description = "The original";
+            //    model[0].ExplosiveYield = 16.6m;
+
+            connection.Close();
 
             return View(model);
         }
