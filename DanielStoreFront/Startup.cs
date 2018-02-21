@@ -27,7 +27,10 @@ namespace DanielStoreFront
             services.AddMvc();
             services.AddAntiforgery();
             services.AddSession();
-            
+
+            //This will read the appsettings.json into an object which I can use throughout my app:
+            services.Configure<Models.ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
+
             services.AddDbContext<IdentityDbContext>
                 (opt => opt.UseSqlServer
                     ("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = DanielTest; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = True; ApplicationIntent = ReadWrite; MultiSubnetFailover = False",

@@ -10,44 +10,54 @@ namespace DanielStoreFront.Controllers
 {
     public class ProductsController : Controller
     {
+        private Models.ConnectionStrings _connectionStrings;
+
+        public ProductsController
+            (Microsoft.Extensions.Options.IOptions<Models.ConnectionStrings> connectionStrings)
+        {
+            _connectionStrings = connectionStrings.Value;
+        }
+
         // GET: /<controller>/
         public IActionResult Index(string IdQuery)
-        {
+        {         
             List<Models.ProductsViewModel> model = new List<Models.ProductsViewModel>();
-
-            string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=DanielTest;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-            var connection = new System.Data.SqlClient.SqlConnection(connectionString);
-
-            connection.Open();
-            var command = connection.CreateCommand();
-            command.CommandText = "SELECT * FROM Products";
-            var reader = command.ExecuteReader();
-            var nameColumn = reader.GetOrdinal("Name");
-            var priceColumn = reader.GetOrdinal("Price");
-            var explosiveYieldColumn = reader.GetOrdinal("ExplosiveYield");
-            var descriptionColumn = reader.GetOrdinal("Description");
-            //var imageUrlColumn = reader.GetOrdinal("ImageUrl");
-            while (reader.Read())
+            
+            using (var connection = new System.Data.SqlClient.SqlConnection(_connectionStrings.DefaultConnection))
             {
-                model.Add(
-                    new Models.ProductsViewModel
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = "SELECT * FROM Products";
+                using (var reader = command.ExecuteReader())
+                {
+                    var nameColumn = reader.GetOrdinal("Name");
+                    var priceColumn = reader.GetOrdinal("Price");
+                    var explosiveYieldColumn = reader.GetOrdinal("ExplosiveYield");
+                    var descriptionColumn = reader.GetOrdinal("Description");
+                    //var imageUrlColumn = reader.GetOrdinal("ImageUrl");
+                    while (reader.Read())
                     {
-                        Name = reader.GetString(nameColumn),  //I can see name is the second column in the database.
-                        Price = reader.GetDecimal(priceColumn),
-                        Description = reader.GetString(descriptionColumn),
-                        ExplosiveYield = reader.GetDecimal(explosiveYieldColumn)
-                    });
-                
+                        model.Add(
+                            new Models.ProductsViewModel
+                            {
+                                Name = reader.IsDBNull(nameColumn) ? "" : reader.GetString(nameColumn),  
+                                Price = reader.IsDBNull(priceColumn) ? 0m : reader.GetDecimal(priceColumn),
+                                Description = reader.IsDBNull(descriptionColumn) ? "" : reader.GetString(descriptionColumn),
+                                ExplosiveYield = reader.IsDBNull(explosiveYieldColumn) ? 0 : reader.GetInt32(explosiveYieldColumn)
+                            });
+
+                    }
+                }
+                //    This is what the model looks like
+                //    model = new Models.ProductsViewModel();
+                //    model.ID = 1;
+                //    model.Name = "Little Boy";
+                //    model.Price = 2000000;
+                //    model.Description = "The original";
+                //    model.ExplosiveYield = 16.6m;
+
+                connection.Close();
             }
-
-            //    model[0] = new Models.ProductsViewModel();
-            //    model[0].ID = 1;
-            //    model[0].Name = "Little Boy";
-            //    model[0].Price = 2000000;
-            //    model[0].Description = "The original";
-            //    model[0].ExplosiveYield = 16.6m;
-
-            connection.Close();
 
             return View(model);
         }
