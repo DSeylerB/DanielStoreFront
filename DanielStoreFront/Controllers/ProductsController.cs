@@ -27,7 +27,12 @@ namespace DanielStoreFront.Controllers
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "SELECT * FROM Products";
+
+
+                command.CommandText = "sp_GetProduct";
+                command.Parameters.AddWithValue("@id", IdQuery);
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+
                 using (var reader = command.ExecuteReader())
                 {
                     var nameColumn = reader.GetOrdinal("Name");
