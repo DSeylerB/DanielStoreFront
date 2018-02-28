@@ -8,13 +8,12 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 
-namespace DanielStoreFront.Migrations.DanielTest
+namespace DanielStoreFront.Migrations
 {
     [DbContext(typeof(DanielTestContext))]
-    [Migration("20180226175251_ProductsAndCategories")]
-    partial class ProductsAndCategories
+    partial class DanielTestContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,6 +127,53 @@ namespace DanielStoreFront.Migrations.DanielTest
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("DanielStoreFront.Models.LineItem", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("OrderID")
+                        .IsRequired();
+
+                    b.Property<int?>("ProductId")
+                        .IsRequired();
+
+                    b.Property<int>("Quantity");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("OrderID");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("LineItems");
+                });
+
+            modelBuilder.Entity("DanielStoreFront.Models.Order", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<decimal>("ShippingTotal");
+
+                    b.Property<decimal>("SubTotal");
+
+                    b.Property<DateTime>("SubmittedDate");
+
+                    b.Property<decimal>("TaxTotal");
+
+                    b.Property<Guid>("TrackingNumber")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Orders");
+                });
+
             modelBuilder.Entity("DanielStoreFront.Models.Products", b =>
                 {
                     b.Property<int>("Id")
@@ -173,6 +219,30 @@ namespace DanielStoreFront.Migrations.DanielTest
                     b.HasIndex("CategoryId");
 
                     b.ToTable("ProductsCategories");
+                });
+
+            modelBuilder.Entity("DanielStoreFront.Models.Review", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Body");
+
+                    b.Property<bool>("IsApproved");
+
+                    b.Property<int?>("ProductId");
+
+                    b.Property<int>("Rating");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -283,6 +353,26 @@ namespace DanielStoreFront.Migrations.DanielTest
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("DanielStoreFront.Models.LineItem", b =>
+                {
+                    b.HasOne("DanielStoreFront.Models.Order", "Order")
+                        .WithMany("LineItems")
+                        .HasForeignKey("OrderID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DanielStoreFront.Models.Products", "Product")
+                        .WithMany("LineItems")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DanielStoreFront.Models.Order", b =>
+                {
+                    b.HasOne("DanielStoreFront.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("DanielStoreFront.Models.ProductsCategories", b =>
                 {
                     b.HasOne("DanielStoreFront.Models.Categories", "Category")
@@ -294,6 +384,17 @@ namespace DanielStoreFront.Migrations.DanielTest
                         .WithMany("ProductsCategories")
                         .HasForeignKey("ProductId")
                         .HasConstraintName("FK_ProductsCategories_Products");
+                });
+
+            modelBuilder.Entity("DanielStoreFront.Models.Review", b =>
+                {
+                    b.HasOne("DanielStoreFront.Models.Products", "Product")
+                        .WithMany("Reviews")
+                        .HasForeignKey("ProductId");
+
+                    b.HasOne("DanielStoreFront.Models.ApplicationUser", "User")
+                        .WithMany("Reviews")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using DanielStoreFront.Models;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,11 +24,11 @@ namespace DanielStoreFront.Controllers
         {
             if (IdQuery.HasValue)
             {
-                return View(_context.Products.Where(x => x.Id == IdQuery.Value));
+                return View(_context.Products.Include(x => x.Reviews).Where(x => x.Id == IdQuery.Value));
             }
             else
             {
-                return View(_context.Products);
+                return View(_context.Products.Include(x => x.Reviews));
             }
         }
        

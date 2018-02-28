@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using DanielStoreFront.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DanielStoreFront
 {
@@ -8,7 +9,7 @@ namespace DanielStoreFront
     {
         internal static void Initialize(DanielTestContext context)
         {
-            context.Database.EnsureCreated();
+            context.Database.Migrate();
 
             if (!context.Categories.Any())
             {
@@ -17,16 +18,16 @@ namespace DanielStoreFront
                     Name = "Bombs",
                     DateCreated = DateTime.Now,
                 },
-                 new Categories{
-                    //Id = 2,
-                    Name = "Missiles",
-                    DateCreated = DateTime.Now,
-                },
-                 new Categories{
-                    //Id = 3,
-                    Name = "Ordinance",
-                    DateCreated = DateTime.Now,
-                },
+                 new Categories {
+                     //Id = 2,
+                     Name = "Missiles",
+                     DateCreated = DateTime.Now,
+                 },
+                 new Categories {
+                     //Id = 3,
+                     Name = "Ordinance",
+                     DateCreated = DateTime.Now,
+                 },
                  new Categories
                  {
                      //Id = 4,
@@ -34,7 +35,7 @@ namespace DanielStoreFront
                      DateCreated = DateTime.Now,
                  }
                 );
-                
+
 
             }
 
@@ -50,7 +51,7 @@ namespace DanielStoreFront
                     DateCreated = DateTime.Now,
 
                 },
-                new Products{
+                new Products {
                     //Id = 2,
                     Name = "Fat Man",
                     Price = 2000000m,
@@ -78,8 +79,21 @@ namespace DanielStoreFront
                     DateCreated = DateTime.Now,
                 }
                 );
+                context.SaveChanges();
             }
-            context.SaveChanges();
+            if (!context.Reviews.Any())
+            {
+                context.Reviews.Add(new Review
+                {
+                    Rating = 5,
+                    Body = "This product is good!",
+                    IsApproved = true,
+                    Product = context.Products.First()
+                });
+                
+            }
         }
+        
+        
     }
 }

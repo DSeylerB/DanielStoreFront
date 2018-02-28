@@ -7,6 +7,7 @@ namespace DanielStoreFront.Models
     {
         public Products()
         {
+            Reviews = new HashSet<Review>();
             ProductsCategories = new HashSet<ProductsCategories>();
         }
 
@@ -18,6 +19,10 @@ namespace DanielStoreFront.Models
         public DateTime? DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
 
+
+        public ICollection<Review> Reviews { get; set; }
         public ICollection<ProductsCategories> ProductsCategories { get; set; }
+
+        public ICollection<LineItem> LineItems { get; set; }
     }
 }
