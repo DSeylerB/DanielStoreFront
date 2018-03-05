@@ -7,7 +7,7 @@ namespace DanielStoreFront.Models
     {
         public Categories()
         {
-            ProductsCategories = new HashSet<ProductsCategories>();
+            ProductCategory = new HashSet<ProductsCategories>();
         }
 
         public int Id { get; set; }
@@ -15,6 +15,6 @@ namespace DanielStoreFront.Models
         public DateTime? DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
 
-        public ICollection<ProductsCategories> ProductsCategories { get; set; }
+        public ICollection<ProductsCategories> ProductCategory { get; set; }
     }
 }

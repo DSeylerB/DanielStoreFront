@@ -49,7 +49,6 @@ namespace DanielStoreFront
                     ExplosiveYield = 16,
                     Description = "The Original.",
                     DateCreated = DateTime.Now,
-
                 },
                 new Products {
                     //Id = 2,
@@ -79,6 +78,13 @@ namespace DanielStoreFront
                     DateCreated = DateTime.Now,
                 }
                 );
+                context.SaveChanges();
+
+                context.ProductsCategories.Add(new ProductsCategories
+                {
+                    CategoryId = context.Categories.First(x => x.Name == "Bombs").Id,
+                    ProductId = context.Products.First(x => x.Name == "Little Boy").Id
+                });
                 context.SaveChanges();
             }
             if (!context.Reviews.Any())

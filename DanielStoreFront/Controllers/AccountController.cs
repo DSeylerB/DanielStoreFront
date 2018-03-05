@@ -4,16 +4,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
+using SendGrid;
+using DanielStoreFront.Models;
 
 namespace DanielStoreFront.Controllers
 {
     public class AccountController : Controller
     {
-        private SignInManager<IdentityUser> _signInManager;
+        private SignInManager<ApplicationUser> _signInManager;
+        private SendGridClient _sendGridClient;
 
-        public AccountController(SignInManager<IdentityUser> signInManager)
+        public AccountController(SignInManager<ApplicationUser> signInManager, SendGrid.SendGridClient sendGridClient)
         {
             this._signInManager = signInManager;
+            this._sendGridClient = sendGridClient;
         }
 
         public IActionResult Register()
@@ -26,26 +30,26 @@ namespace DanielStoreFront.Controllers
             return View();
         }
 
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            _signInManager.SignOutAsync().Wait();
+            await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(string username, string password)
+        public async Task<IActionResult> Login(string username, string password)
         {
 
             if (ModelState.IsValid)
             {
-                IdentityUser oldUser = _signInManager.UserManager.FindByNameAsync(username).Result;
+                ApplicationUser oldUser = await _signInManager.UserManager.FindByNameAsync(username);
                 if (oldUser != null)
                 {
                    if (_signInManager.UserManager.CheckPasswordAsync(oldUser, password).Result)
                    {
-                        _signInManager.SignInAsync(oldUser, false).Wait();
+                        await _signInManager.SignInAsync(oldUser, false);
                         return RedirectToAction("Index", "Home");
                    }
                     else
@@ -65,18 +69,29 @@ namespace DanielStoreFront.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Register(string username, string password)
+        public async Task<IActionResult> Register(string username, string password)
         {
             if (ModelState.IsValid)
             {
-                IdentityUser newUser = new IdentityUser(username);
-                var userResult = _signInManager.UserManager.CreateAsync(newUser).Result;
+                ApplicationUser newUser = new ApplicationUser { UserName = username };
+                var userResult = await _signInManager.UserManager.CreateAsync(newUser);
                 if (userResult.Succeeded)
                 {
-                    var passwordResult = _signInManager.UserManager.AddPasswordAsync(newUser, password).Result;
+                    var passwordResult = await _signInManager.UserManager.AddPasswordAsync(newUser, password);
                     if (passwordResult.Succeeded)
                     {
-                        _signInManager.SignInAsync(newUser, false).Wait();
+
+                        //TODO: send new users an email.
+
+                        SendGrid.Helpers.Mail.SendGridMessage message = new SendGrid.Helpers.Mail.SendGridMessage();
+                        message.AddTo(username);
+                        message.Subject = "Email Confirmation for RADZONE.com";
+                        message.SetFrom("BigSauce@RADZONE.li");
+                        message.AddContent("text/plain", "Thank you, " + username + " for signing up for RADZONE.com!");
+                        await _sendGridClient.SendEmailAsync(message);
+
+
+                        await _signInManager.SignInAsync(newUser, false);
                         return RedirectToAction("Index", "Home");
                     }
                     else
@@ -85,7 +100,7 @@ namespace DanielStoreFront.Controllers
                         {
                             ModelState.AddModelError(error.Code, error.Description);
                         }
-                        _signInManager.UserManager.DeleteAsync(newUser).Wait();
+                        await _signInManager.UserManager.DeleteAsync(newUser);
                     }
                 }
                 else

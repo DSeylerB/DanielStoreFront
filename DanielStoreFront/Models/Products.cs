@@ -8,7 +8,7 @@ namespace DanielStoreFront.Models
         public Products()
         {
             Reviews = new HashSet<Review>();
-            ProductsCategories = new HashSet<ProductsCategories>();
+            Category = new HashSet<ProductsCategories>();
         }
 
         public int Id { get; set; }
@@ -21,7 +21,7 @@ namespace DanielStoreFront.Models
 
 
         public ICollection<Review> Reviews { get; set; }
-        public ICollection<ProductsCategories> ProductsCategories { get; set; }
+        public ICollection<ProductsCategories> Category { get; set; }
 
         public ICollection<LineItem> LineItems { get; set; }
     }

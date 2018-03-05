@@ -37,7 +37,7 @@ namespace DanielStoreFront
                 (opt => opt.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection"),
                         sqlOptions => sqlOptions.MigrationsAssembly(this.GetType().Assembly.FullName))
-                    ); */
+                    ); */ 
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<Models.DanielTestContext>()
@@ -45,6 +45,11 @@ namespace DanielStoreFront
 
             services.AddDbContext<Models.DanielTestContext>(
                 opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddTransient<SendGrid.SendGridClient>((x) => 
+            {
+                return new SendGrid.SendGridClient(Configuration["sendGrid"]);
+            } );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

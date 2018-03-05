@@ -116,13 +116,13 @@ namespace DanielStoreFront.Models
                 entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
 
                 entity.HasOne(d => d.Category)
-                    .WithMany(p => p.ProductsCategories)
+                    .WithMany(p => p.ProductCategory)
                     .HasForeignKey(d => d.CategoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PRoductsCategories_Categories");
 
                 entity.HasOne(d => d.Product)
-                    .WithMany(p => p.ProductsCategories)
+                    .WithMany(p => p.Category)
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ProductsCategories_Products");
