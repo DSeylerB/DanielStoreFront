@@ -24,14 +24,14 @@ namespace DanielStoreFront.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(CheckoutViewModel model)
+        public IActionResult Index(CheckoutViewModel model, string creditcardnumber, string creditcardname, string creditcardverificationvalue, string expirationmonth, string expirationyear)
         {
             if (ModelState.IsValid)
             {
-                return View();
+                return this.RedirectToAction("Index", "Home");
             }
 
-            ViewData["States"] = new string[] { "Alabama", "Arkansas", "Alaska" };
+            //ViewData["States"] = new string[] { "Alabama", "Arkansas", "Alaska" };
 
             return View();
         }

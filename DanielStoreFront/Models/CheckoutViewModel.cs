@@ -25,6 +25,8 @@ namespace DanielStoreFront.Models
 
         public string DeliveryMethod { get; set; }
 
+
+
         
     }
 }

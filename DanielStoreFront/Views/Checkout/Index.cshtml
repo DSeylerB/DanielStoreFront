@@ -54,28 +54,70 @@
             </div>
         </div>
 
-        <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="GiftCheck">
-            <label class="custom-control-label" for="GiftCheck">This order is a "gift".</label>
+
+
+        <div class="form-group">
+            <label for="creditcardnumber">Credit Card</label>
+            <input type="text" name="creditcardnumber" class="form-control" required />
         </div>
-        <button class="btn btn-primary" type="submit">Submit form</button>
+        <div class="form-group">
+            <label for="creditcardname">Name On Card</label>
+            <input type="text" name="creditcardname" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label for="creditcardverificationvalue">CVV</label>
+            <input type="text" name="creditcardverificationvalue" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label for="expirationmonth">Expiration</label>
+            <div class="form-row">
+
+
+                <div class="col">
+                    <select name="expirationmonth" class="form-control" required>
+                        <option value="01">01</option>
+                        <option value="02">02</option>
+                        <option value="03">03</option>
+                        <option value="04">04</option>
+                        <option value="05">05</option>
+                        <option value="06">06</option>
+                        <option value="07">07</option>
+                        <option value="08">08</option>
+                        <option value="09">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="01">01</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <select name="expirationyear" class="form-control" required>
+                        <option value="2018">2018</option>
+                        <option value="2019">2019</option>
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
         @section Scripts{
         <script type="text/javascript">
-        $(document).ready(() => {
-            $('form').submit((event) => {
-                if (event.target.checkValidity() == false) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                $(event.target).addClass('was-validated');
-            })
-        });
+            $(document).ready(() => {
+                $('form').submit((event) => {
+                    if (event.target.checkValidity() == false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    $(event.target).addClass('was-validated');
+                })
+            });
 
         </script>
         }
 
 
-        
+
 
     </form>
 
