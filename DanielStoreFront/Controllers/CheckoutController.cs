@@ -11,6 +11,15 @@ namespace DanielStoreFront.Controllers
 {
     public class CheckoutController : Controller
     {
+
+        private Braintree.BraintreeGateway _braintreeGateway;
+
+        public CheckoutController( Braintree.BraintreeGateway braintreeGateway)
+        {
+			
+            _braintreeGateway = braintreeGateway;
+        }
+
         // GET: /<controller>/
         public IActionResult Index()
         {
@@ -18,17 +27,37 @@ namespace DanielStoreFront.Controllers
             Request.Cookies.TryGetValue("productID", out productName);
             ViewData["productName"] = productName;
 
+
             // ViewData["States"] = new string[] {"Alabama", "Arkansas", "Alaska" };
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Index(CheckoutViewModel model, string creditcardnumber, string creditcardname, string creditcardverificationvalue, string expirationmonth, string expirationyear)
+        public async Task<IActionResult> Index(CheckoutViewModel model, string creditcardnumber, string creditcardname, string creditcardverificationvalue, string expirationmonth, string expirationyear)
         {
             if (ModelState.IsValid)
             {
-                return this.RedirectToAction("Index", "Home");
+                Braintree.TransactionRequest saleRequest = new Braintree.TransactionRequest();
+                saleRequest.Amount = 10;    //Hard-coded for now
+                saleRequest.CreditCard = new Braintree.TransactionCreditCardRequest
+                {
+                    CardholderName = creditcardname,
+                    CVV = creditcardverificationvalue,
+                    ExpirationMonth = expirationmonth,
+                    ExpirationYear = expirationyear,
+                    Number = creditcardnumber
+                };
+                var result = await _braintreeGateway.Transaction.SaleAsync(saleRequest);
+                if (result.IsSuccess())
+                {
+                    //If model state is valid, proceed to the next step.
+                    return this.RedirectToAction("Index", "Home");
+                }
+                foreach (var error in result.Errors.All())
+                {
+                    ModelState.AddModelError(error.Code.ToString(), error.Message);
+                }
             }
 
             //ViewData["States"] = new string[] { "Alabama", "Arkansas", "Alaska" };
