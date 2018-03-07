@@ -24,4 +24,10 @@
     <Folder Include="Migrations\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="smartystreets-dotnet-sdk">
+      <HintPath>smartystreets-dotnet-sdk.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

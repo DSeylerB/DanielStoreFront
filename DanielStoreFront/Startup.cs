@@ -61,6 +61,16 @@ namespace DanielStoreFront
                     Configuration["braintree.privatekey"]
                 );
             });
+
+            services.AddTransient<SmartyStreets.USStreetApi.Client>((x) =>
+            {
+                var client = new SmartyStreets.ClientBuilder(
+                    Configuration["smartystreets.authid"],
+                    Configuration["smartystreets.authtoken"])
+                        .BuildUsStreetApiClient();
+
+                return client;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

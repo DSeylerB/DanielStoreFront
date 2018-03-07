@@ -11,13 +11,23 @@ namespace DanielStoreFront.Controllers
 {
     public class CheckoutController : Controller
     {
-
+        private SmartyStreets.USStreetApi.Client _usStreetClient;
         private Braintree.BraintreeGateway _braintreeGateway;
 
-        public CheckoutController( Braintree.BraintreeGateway braintreeGateway)
+        public CheckoutController( Braintree.BraintreeGateway braintreeGateway, SmartyStreets.USStreetApi.Client usStreetClient)
         {
-			
+            _usStreetClient = usStreetClient;
             _braintreeGateway = braintreeGateway;
+        }
+
+        public IActionResult ValidateAddress(string street, string city, string state)
+        {
+            SmartyStreets.USStreetApi.Lookup lookup = new SmartyStreets.USStreetApi.Lookup();
+            lookup.Street = street;
+            lookup.City = city;
+            lookup.State = state;
+            _usStreetClient.Send(lookup);
+            return Json(lookup.Result);
         }
 
         // GET: /<controller>/
@@ -34,19 +44,43 @@ namespace DanielStoreFront.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(CheckoutViewModel model, string creditcardnumber, string creditcardname, string creditcardverificationvalue, string expirationmonth, string expirationyear)
+        public async Task<IActionResult> Index(CheckoutViewModel model)
         {
             if (ModelState.IsValid)
             {
+
+                Braintree.CustomerRequest customerRequest = new Braintree.CustomerRequest
+                {
+
+                };
+
+                Braintree.AddressRequest addressRequest = new Braintree.AddressRequest
+                {
+                    StreetAddress = model.Billingaddress,
+                    PostalCode = model.BillingZip,
+                    Region = model.BillingState,
+                    Locality = model.BillingCity,
+                    CountryName = "USA"
+                };
+ 
                 Braintree.TransactionRequest saleRequest = new Braintree.TransactionRequest();
-                saleRequest.Amount = 10;    //Hard-coded for now
+                saleRequest.Amount = 10;    //Hard-coded forever because Braintree ain't gonna take $2 million+
                 saleRequest.CreditCard = new Braintree.TransactionCreditCardRequest
                 {
-                    CardholderName = creditcardname,
-                    CVV = creditcardverificationvalue,
-                    ExpirationMonth = expirationmonth,
-                    ExpirationYear = expirationyear,
-                    Number = creditcardnumber
+                    CardholderName = model.creditcardname,
+                    CVV = model.creditcardverificationvalue,
+                    ExpirationMonth = model.expirationmonth,
+                    ExpirationYear = model.expirationyear,
+                    Number = model.creditcardnumber
+                };
+                saleRequest.BillingAddress = new Braintree.AddressRequest
+                {
+                    StreetAddress = model.Billingaddress,
+                    PostalCode = model.BillingZip,
+                    Region = model.BillingState,
+                    Locality = model.BillingCity,
+                    CountryName = "USA"
+
                 };
                 var result = await _braintreeGateway.Transaction.SaleAsync(saleRequest);
                 if (result.IsSuccess())
