@@ -82,7 +82,7 @@ namespace DanielStoreFront.Controllers
                     if (passwordResult.Succeeded)
                     {
 
-                        //TODO: send new users an email.
+                        
 
                         SendGrid.Helpers.Mail.SendGridMessage message = new SendGrid.Helpers.Mail.SendGridMessage();
                         message.AddTo(username);

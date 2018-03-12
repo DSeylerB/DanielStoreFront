@@ -45,6 +45,7 @@ namespace DanielStoreFront
                 {
                     //Id = 1,
                     Name = "Little Boy",
+                    ImageUrl = @"\images\Little_boy",
                     Price = 2000000m,
                     ExplosiveYield = 16,
                     Description = "The Original.",
@@ -53,6 +54,7 @@ namespace DanielStoreFront
                 new Products {
                     //Id = 2,
                     Name = "Fat Man",
+                    ImageUrl = @"\images\Little_boy",
                     Price = 2000000m,
                     ExplosiveYield = 18,
                     Description = "Little Boy's bigger brother.",
@@ -63,6 +65,7 @@ namespace DanielStoreFront
                 {
                     //Id = 3,
                     Name = "Tzar Bomba",
+                    ImageUrl = @"\images\Little_boy",
                     Price = 2000000000m,
                     ExplosiveYield = 100000,
                     Description = "The king of all bombs, so powerful that the russians were scared to test it at full power!",
@@ -72,6 +75,7 @@ namespace DanielStoreFront
                 {
                     //Id = 4, 
                     Name = "Yellow Cake",
+                    ImageUrl = @"\images\Little_boy",
                     Price = 20000m,
                     ExplosiveYield = 0,
                     Description = "Good ol' yellow cake sold by the kilogram",
