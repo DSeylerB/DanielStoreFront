@@ -6,7 +6,7 @@ namespace DanielStoreFront.Models
 {
     public partial class DanielTestContext : Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityDbContext<ApplicationUser>
     {
-        public DanielTestContext(): base()
+        public DanielTestContext() : base()
         {
 
         }
@@ -15,7 +15,7 @@ namespace DanielStoreFront.Models
         {
 
         }
-               
+
         public virtual DbSet<Cart> Cart { get; set; }
         public virtual DbSet<Categories> Categories { get; set; }
         public virtual DbSet<Products> Products { get; set; }
@@ -25,7 +25,8 @@ namespace DanielStoreFront.Models
         public virtual DbSet<LineItem> LineItems { get; set; }
 
         public virtual DbSet<Review> Reviews { get; set; }
-          
+        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

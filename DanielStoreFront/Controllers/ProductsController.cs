@@ -3,59 +3,150 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using DanielStoreFront.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using DanielStoreFront.Models;
 
 namespace DanielStoreFront.Controllers
 {
     public class ProductsController : Controller
     {
-        private DanielTestContext _context;
+        private readonly DanielTestContext _context;
 
         public ProductsController(DanielTestContext context)
         {
             _context = context;
         }
 
-        // GET: /<controller>/
-        public IActionResult Index(int? IdQuery)
+        // GET: Products
+        public async Task<IActionResult> Index(string catId)
         {
-            if (IdQuery.HasValue)
-            {
-                return View(_context.Products.Include(x => x.Reviews).Where(x => x.Id == IdQuery.Value));
-            }
-            else
-            {
-                return View(_context.Products.Include(x => x.Reviews));
-            }
+            return View(await _context.Categories.Include(x =>x.ProductCategory).ThenInclude(x => x.Product).ToListAsync());
         }
-       
-        [HttpPost]
-        public IActionResult Index(string id, bool? extraparam)
+
+        // GET: Products/Details/5
+        public async Task<IActionResult> Details(int? id)
         {
-            string cartId;
-            if(!Request.Cookies.ContainsKey("cartId"))
+            if (id == null)
             {
-                cartId = Guid.NewGuid().ToString();
-                Response.Cookies.Append("cartId", cartId, 
-                    new Microsoft.AspNetCore.Http.CookieOptions
+                return NotFound();
+            }
+
+            var products = await _context.Products
+                .SingleOrDefaultAsync(m => m.Id == id);
+            if (products == null)
+            {
+                return NotFound();
+            }
+
+            return View(products);
+        }
+
+        // GET: Products/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Products/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,ImageUrl,Price,ExplosiveYield,DateCreated,DateModified")] Products products)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(products);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(products);
+        }
+
+        // GET: Products/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var products = await _context.Products.SingleOrDefaultAsync(m => m.Id == id);
+            if (products == null)
+            {
+                return NotFound();
+            }
+            return View(products);
+        }
+
+        // POST: Products/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,ImageUrl,Price,ExplosiveYield,DateCreated,DateModified")] Products products)
+        {
+            if (id != products.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(products);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ProductsExists(products.Id))
                     {
-                        Expires = DateTime.Now.AddYears(1)
-                    });
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
             }
-            else
+            return View(products);
+        }
+
+        // GET: Products/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
             {
-                Request.Cookies.TryGetValue("cartId", out cartId);
+                return NotFound();
             }
 
-            Response.Cookies.Append("productID", id);
+            var products = await _context.Products
+                .SingleOrDefaultAsync(m => m.Id == id);
+            if (products == null)
+            {
+                return NotFound();
+            }
 
-            
-            //this.HttpContext.Session.Set(cartId, );
+            return View(products);
+        }
 
-            return RedirectToAction("Index", "Checkout");
+        // POST: Products/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var products = await _context.Products.SingleOrDefaultAsync(m => m.Id == id);
+            _context.Products.Remove(products);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool ProductsExists(int id)
+        {
+            return _context.Products.Any(e => e.Id == id);
         }
     }
 }

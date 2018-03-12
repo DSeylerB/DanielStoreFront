@@ -1,38 +1,47 @@
-﻿@model IEnumerable<DanielStoreFront.Models.Products>
+@model IEnumerable<DanielStoreFront.Models.Categories>
+
 @{
     ViewData["Title"] = "Index";
 }
-<!--./Views/Products/index.cshtml/-->
-@foreach (var product in Model)
+@foreach (var cat in Model)
 {
-<h2>@product.Name</h2>
-    <div class="row">
-        <div class="col-4">
-            <img src="@product.ImageUrl" alt="@product.Name" sizes=" = 300" />
-        </div>
-        <div class="col-8">
-            <dl>
-                <dt>Explosive Yield</dt>
-                <dd>@product.ExplosiveYield Kilotons</dd>
-                <dt>Description</dt>
-                <dd>@product.Description</dd>
-                <dt>Price</dt>
-                <dd>@(product.Price.HasValue ? product.Price.Value.ToString("c") : "No Price")</dd>
-            </dl>
-            @if(product.Reviews != null && product.Reviews.Any())
-             {
-                    @foreach(var review in product.Reviews)
-                     {
-                        <blockquote>
-                            @review.Body - @review.Rating
-                        </blockquote>
+<h2>@cat.Name</h2>
+<!--./Views/Products/index.cshtml/-->
+<div class="card-deck">
+    @foreach (var product in cat.ProductCategory.Select(x =>x.Product))
+    {
 
-                     }
-             }
-            <form asp-action="index" asp-controller="Products">
-                <input type="hidden" name="id" value="@product.Name" />
-                <input type="Submit" value="Add to cart" />
-            </form>
-        </div>
-    </div>
+                <div class="card text-center">
+                    <h2>@product.Name</h2>
+                    <img class="img-fluid card-img-top" src="@product.ImageUrl" alt="@product.Name" width: 100% />
+
+
+                    <div>
+                        <dl>
+                            <dt>Explosive Yield</dt>
+                            <dd>@product.ExplosiveYield Kilotons</dd>
+                            <dt>Description</dt>
+                            <dd>@product.Description</dd>
+                            <dt>Price</dt>
+                            <dd>@(product.Price.HasValue ? product.Price.Value.ToString("c") : "No Price")</dd>
+                        </dl>
+                        @if (product.Reviews != null && product.Reviews.Any())
+                        {
+                            @foreach (var review in product.Reviews)
+                            {
+                                <blockquote>
+                                    @review.Body - @review.Rating
+                                </blockquote>
+
+                            }
+                        }
+                        <form asp-action="index" asp-controller="Products">
+                            <input type="hidden" name="id" value="@product.Name" />
+                            <input type="Submit" value="Add to cart" />
+                        </form>
+                    </div>
+                    </div>
+
+    }
+            </div>
 }

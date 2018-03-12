@@ -29,22 +29,12 @@ namespace DanielStoreFront
             services.AddAntiforgery();
             services.AddSession();
 
-            //This will read the appsettings.json into an object which I can use throughout my app:
-            services.Configure<Models.ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
-
-            /* No longer needed but I'm keeping it here just in case
-            services.AddDbContext<IdentityDbContext>
-                (opt => opt.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection"),
-                        sqlOptions => sqlOptions.MigrationsAssembly(this.GetType().Assembly.FullName))
-                    ); */ 
+            services.AddDbContext<DanielTestContext>(
+                opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<Models.DanielTestContext>()
+                .AddEntityFrameworkStores<DanielTestContext>()
                 .AddDefaultTokenProviders();
-
-            services.AddDbContext<Models.DanielTestContext>(
-                opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddTransient<SendGrid.SendGridClient>((x) => 
             {

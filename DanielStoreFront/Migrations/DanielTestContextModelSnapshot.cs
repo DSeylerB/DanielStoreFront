@@ -195,6 +195,8 @@ namespace DanielStoreFront.Migrations
 
                     b.Property<int?>("ExplosiveYield");
 
+                    b.Property<string>("ImageUrl");
+
                     b.Property<string>("Name")
                         .HasMaxLength(100);
 
@@ -376,12 +378,12 @@ namespace DanielStoreFront.Migrations
             modelBuilder.Entity("DanielStoreFront.Models.ProductsCategories", b =>
                 {
                     b.HasOne("DanielStoreFront.Models.Categories", "Category")
-                        .WithMany("ProductsCategories")
+                        .WithMany("ProductCategory")
                         .HasForeignKey("CategoryId")
                         .HasConstraintName("FK_PRoductsCategories_Categories");
 
                     b.HasOne("DanielStoreFront.Models.Products", "Product")
-                        .WithMany("ProductsCategories")
+                        .WithMany("Category")
                         .HasForeignKey("ProductId")
                         .HasConstraintName("FK_ProductsCategories_Products");
                 });

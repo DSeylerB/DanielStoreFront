@@ -90,6 +90,7 @@ namespace DanielStoreFront.Migrations
                     DateModified = table.Column<DateTime>(type: "datetime", nullable: true, defaultValueSql: "(getdate())"),
                     Description = table.Column<string>(maxLength: 1000, nullable: true),
                     ExplosiveYield = table.Column<int>(nullable: true),
+                    ImageUrl = table.Column<string>(nullable: true),
                     Name = table.Column<string>(maxLength: 100, nullable: true),
                     Price = table.Column<decimal>(type: "money", nullable: true)
                 },
