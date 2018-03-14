@@ -45,7 +45,7 @@ namespace DanielStoreFront
                 {
                     //Id = 1,
                     Name = "Little Boy",
-                    ImageUrl = "images/Little_boy.jpg",
+                    ImageUrl = "/images/Little_boy.jpg",
                     Price = 2000000m,
                     ExplosiveYield = 16,
                     Description = "The Original.",
@@ -54,7 +54,7 @@ namespace DanielStoreFront
                 new Products {
                     //Id = 2,
                     Name = "Fat Man",
-                    ImageUrl = "images/Little_boy.jpg",
+                    ImageUrl = "/images/Little_boy.jpg",
                     Price = 2000000m,
                     ExplosiveYield = 18,
                     Description = "Little Boy's bigger brother.",
@@ -65,7 +65,7 @@ namespace DanielStoreFront
                 {
                     //Id = 3,
                     Name = "Tzar Bomba",
-                    ImageUrl = "images/Little_boy.jpg",
+                    ImageUrl = "/images/Little_boy.jpg",
                     Price = 2000000000m,
                     ExplosiveYield = 100000,
                     Description = "The king of all bombs, so powerful that the russians were scared to test it at full power!",
@@ -75,7 +75,7 @@ namespace DanielStoreFront
                 {
                     //Id = 4, 
                     Name = "Yellow Cake",
-                    ImageUrl = "images/Little_boy.jpg",
+                    ImageUrl = "/images/Little_boy.jpg",
                     Price = 20000m,
                     ExplosiveYield = 0,
                     Description = "Good ol' yellow cake sold by the kilogram",
@@ -85,7 +85,7 @@ namespace DanielStoreFront
                  {
                      //Id = 5, 
                      Name = "SCUD",
-                     ImageUrl = "images/Little_boy.jpg",
+                     ImageUrl = "/images/Little_boy.jpg",
                      Price = 2000000m,
                      ExplosiveYield = 10000,
                      Description = "A big scary missile that harkens back to the cold war",
@@ -95,7 +95,7 @@ namespace DanielStoreFront
                  {
                      //Id = 6, 
                      Name = "Casaba Howitzer",
-                     ImageUrl = "images/Little_boy.jpg",
+                     ImageUrl = "/images/Little_boy.jpg",
                      Price = 50000000m,
                      ExplosiveYield = 0,
                      Description = "What's more destructive than a conventional nuke? How about  bomb that focuses Its entire yield into a narrow cone! Now available via orbital strike.",

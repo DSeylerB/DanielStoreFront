@@ -19,9 +19,17 @@ namespace DanielStoreFront.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index(string catId)
+        public async Task<IActionResult> Index(string id)
         {
-            return View(await _context.Categories.Include(x =>x.ProductCategory).ThenInclude(x => x.Product).ToListAsync());
+            if (string.IsNullOrEmpty(id))
+            {
+                //.Where(x => x.ProductCategory == id) ????
+                return View(await _context.Categories.Include(x => x.ProductCategory).ThenInclude(x => x.Product).ToListAsync());
+            }
+            else
+            {
+                return View(await _context.Categories.Include(x => x.ProductCategory).ThenInclude(x => x.Product).Where(x => x.Name == id).ToListAsync());
+            }
         }
 
         // GET: Products/Details/5
@@ -53,11 +61,18 @@ namespace DanielStoreFront.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,ImageUrl,Price,ExplosiveYield,DateCreated,DateModified")] Products products)
+        public async Task<IActionResult> Create(Products products, int categoryId)
         {
             if (ModelState.IsValid)
             {
+                products.Category.Add(new ProductsCategories
+                {
+                    CategoryId = categoryId,
+                    Product = products
+                });
                 _context.Add(products);
+
+                
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
