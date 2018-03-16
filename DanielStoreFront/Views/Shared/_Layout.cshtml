@@ -36,7 +36,7 @@
                 @if (User.Identity.IsAuthenticated)
     {
             <li class="nav-item"><a asp-area="" asp-controller="Account" asp-action="Logout" class="nav-link">Logout as @User.Identity.Name</a></li>
-            @if (User.Identity.Name == "Admin") //I am fully aware of how shitty this is
+            @if (User.Identity.Name == "Admin") //I am fully aware of how shitty this is but I'm leaving it anyway because it's funny
 {
             <li class="nav-item"><a asp-area="" asp-controller="Products" asp-action="Create" class="nav-link">Add Products</a></li>
             

@@ -5,7 +5,7 @@
 
   
 
-    <form class="needs-validation" novalidate name="CheckoutForm" method="post">
+    <form asp-action="placeOrder" asp-controller="Checkout" class="needs-validation" novalidate name="CheckoutForm" method="post">
         @Html.AntiForgeryToken()
         <h2>Billing Information</h2>
         <div class="row" name="BillingInfo">
@@ -146,6 +146,9 @@
                     </select>
                 </div>
             </div>
+        </div>
+        <div>
+            <input type="Submit" name="checkoutButton" value="Place Order" />
         </div>
 
         @section Scripts{

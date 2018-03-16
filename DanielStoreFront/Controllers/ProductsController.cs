@@ -130,6 +130,12 @@ namespace DanielStoreFront.Controllers
             return View(products);
         }
 
+        [HttpPost]
+        public IActionResult addToCart(bool? h)
+        {
+            return RedirectToAction("Index", "Checkout");
+        }
+
         // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

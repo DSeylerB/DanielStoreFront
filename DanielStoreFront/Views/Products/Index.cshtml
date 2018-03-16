@@ -3,45 +3,52 @@
 @{
     ViewData["Title"] = "Index";
 }
+
+
+
+
+
+
+
 @foreach (var cat in Model)
 {
-<h2>@cat.Name</h2>
-<!--./Views/Products/index.cshtml/-->
-<div class="card-deck row">
-    @foreach (var product in cat.ProductCategory.Select(x =>x.Product))
-    {
+    <h2>@cat.Name</h2>
+    <!--./Views/Products/index.cshtml/-->
+    <div class="card-deck row">
+        @foreach (var product in cat.ProductCategory.Select(x => x.Product))
+        {
 
-                <div class="card text-center sm-col-4">
-                    <h2>@product.Name</h2>
-                    <img class="img-fluid card-img-top" src="@product.ImageUrl" alt="@product.Name" width: 100% />
+            <div class="card text-center sm-col-4">
+                <h2>@product.Name</h2>
+                <img class="img-fluid card-img-top" src="@product.ImageUrl" alt="@product.Name" width: 100% />
 
 
-                    <div>
-                        <dl>
-                            <dt>Explosive Yield</dt>
-                            <dd>@product.ExplosiveYield Kilotons</dd>
-                            <dt>Description</dt>
-                            <dd>@product.Description</dd>
-                            <dt>Price</dt>
-                            <dd>@(product.Price.HasValue ? product.Price.Value.ToString("c") : "No Price")</dd>
-                        </dl>
-                        @if (product.Reviews != null && product.Reviews.Any())
+                <div>
+                    <dl>
+                        <dt>Explosive Yield</dt>
+                        <dd>@product.ExplosiveYield Kilotons</dd>
+                        <dt>Description</dt>
+                        <dd>@product.Description</dd>
+                        <dt>Price</dt>
+                        <dd>@(product.Price.HasValue ? product.Price.Value.ToString("c") : "No Price")</dd>
+                    </dl>
+                    @if (product.Reviews != null && product.Reviews.Any())
+                    {
+                        @foreach (var review in product.Reviews)
                         {
-                            @foreach (var review in product.Reviews)
-                            {
-                                <blockquote>
-                                    @review.Body - @review.Rating
-                                </blockquote>
+                            <blockquote>
+                                @review.Body - @review.Rating
+                            </blockquote>
 
-                            }
                         }
-                        <form asp-action="index" asp-controller="Products">
-                            <input type="hidden" name="id" value="@product.Name" />
-                            <input type="Submit" value="Add to cart" />
-                        </form>
-                    </div>
-                    </div>
-
-    }
+                    }
+                    <form asp-action="addToCart" asp-controller="Products">
+                        <input type="hidden" name="id" value="@product.Id" />
+                        <input type="Submit" name="@product.Id" value="Add to cart" />
+                    </form>
+                </div>
             </div>
+
+        }
+    </div>
 }
